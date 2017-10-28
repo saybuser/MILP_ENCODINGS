@@ -1,0 +1,13 @@
+reset;
+
+options solver gurobi_ampl;
+options gurobi_options 'presolve 0 solnsens 1';
+
+model W:\Navigation.mod;
+data W:\Navigation.dat;
+
+solve;
+
+display z;
+display move_dt;
+display location_dt;
