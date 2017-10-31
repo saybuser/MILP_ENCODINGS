@@ -1,7 +1,6 @@
 reset;
 
-options solver gurobi_ampl;
-options gurobi_options 'presolve 0 solnsens 1';
+options solver gurobi;
 
 model W:\Navigation.mod;
 data W:\Navigation.dat;
