@@ -1,6 +1,6 @@
 param bigM:= 100;
 
-param horizon:= 100;
+param horizon:= 200;
 
 param nDims:= 2;
 
@@ -8,9 +8,9 @@ param minmazebounds_d:= 1 0 2 0;
 
 param maxmazebounds_d:= 1 10 2 10;
 
-param minactionbounds_d:= 1 -0.1 2 -0.1;
+param minactionbounds_d:= 1 -0.05 2 -0.05;
 
-param maxactionbounds_d:= 1 0.1 2 0.1;
+param maxactionbounds_d:= 1 0.05 2 0.05;
 
 param minmudbounds_d:= 1 4 2 4;
 
@@ -22,7 +22,7 @@ param mingoalbounds_d:= 1 7 2 7;
 
 param maxgoalbounds_d:= 1 9 2 9;
 
-param windpower:= 0.05;
+param windpower:= 0.025;
 
 param minwindtunnelbounds_d:= 1 0 2 0;
 
