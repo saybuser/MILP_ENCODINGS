@@ -1,0 +1,90 @@
+//////////////////////////////////////
+//Buser.rddl
+//
+//Author:Buser
+//////////////////////////////////////
+
+domain Navigation_Problem{
+
+	requirements = { 
+		reward-deterministic 
+	};
+
+	types {
+		dim: object;
+	};
+	
+	pvariables {
+	
+		// Constant
+		MINMAZEBOUND(dim): { non-fluent, real, default = 0.0 };
+		MAXMAZEBOUND(dim): { non-fluent, real, default = 10.0 };
+		MINACTIONBOUND(dim): { non-fluent, real, default = -1.0 };
+		MAXACTIONBOUND(dim): { non-fluent, real, default = 1.0 };
+		MINGOALBOUND(dim): { non-fluent, real, default = 7.0 };
+		MAXGOALBOUND(dim): { non-fluent, real, default = 9.0 };
+		MINMUDBOUND(dim): { non-fluent, real, default = 4.0 };
+		MAXMUDBOUND(dim): { non-fluent, real, default = 6.0 };
+		WINDDIRECTION(dim): { non-fluent, real, default = 0.0 };
+		WINDPOWER: { non-fluent, real, default = 0.5 };
+		MINWINDTUNNELBOUND(dim): { non-fluent, real, default = 0.0 };
+		MAXWINDTUNNELBOUND(dim): { non-fluent, real, default = 5.0 };
+		
+		//State
+		location(dim): {state-fluent, real, default = 0.0 };
+		wind: {state-fluent, real, default = 0.0 };
+				
+		//Action
+		move(dim): { action-fluent, real, default = 0.0 };
+	};
+	
+	cpfs {
+		discountfactor = if(forall_{?l:dim} [MINMUDBOUND(?l)<=location(?l)  ^ location(?l)<=MAXMUDBOUND(?l)]) then 0.5
+					else  1.0;
+
+		wind = if(forall_{?l:dim} [MINWINDTUNNELBOUND(?l)<=location(?l)  ^ location(?l)<=MAXWINDTUNNELBOUND(?l)]) then WINDPOWER
+					
+					else  0.0;
+
+		location'(?l)= location(?l) + move(?l)*discountfactor + WINDDIRECTION(?l)*wind;
+
+
+	};
+	
+	reward = if(forall_{?l:dim} [MINGOALBOUND(?l)<=location(?l)  ^ location(?l)<=MAXGOALBOUND(?l)]) then 1.0
+				else 0.0;
+								
+	state-action-constraints {
+		forall_{?l:dim} move(?l)<=MAXACTIONBOUND(?l);
+		forall_{?l:dim} move(?l)>=MINACTIONBOUND(?l);
+		forall_{?l:dim} location(?l)<=MAXMAZEBOUND(?l);
+		forall_{?l:dim} location(?l)>=MINMAZEBOUND(?l);
+	};
+
+}
+
+non-fluents Navigation_non {
+	domain = Navigation_Problem;
+	objects{
+		dim: {x,y};
+	};
+	non-fluents {
+		MINMAZEBOUND(x) = 0.0;
+		WINDDIRECTION(x) = -1.0;
+		WINDDIRECTION(y) = 0.0;
+		MAXWINDTUNNELBOUND(x) = 10.0;
+	};
+}
+
+instance is1{
+	domain = Navigation_Problem;
+	non-fluents = Navigation_non;
+	init-state{
+		location(x) = 0.0;
+		location(y) = 0.0;
+	};
+	max-nondef-actions = 2;
+	horizon = 10;
+	discount = 1.0;
+}
+
