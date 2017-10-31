@@ -38,7 +38,7 @@ var move_dt{d in 1..nDims, t in 1..horizon};
 
 var location_dt{d in 1..nDims, t in 1..horizon+1};
 
-var wind_dt{d in 1..nDims, t in 1..horizon};
+var wind_t{t in 1..horizon};
 
 var atgoal_t{t in 2..horizon+1} binary;
 
@@ -98,16 +98,16 @@ subject to if2ThenCon2{c in 1..nCond, d in 1..nDims, t in 1..horizon}:
 	then2_t[t] - if2_cdt[c,d,t] <= 0;
 
 subject to windCon1{d in 1..nDims, t in 1..horizon}:
-	wind_dt[d,t] + bigM*then2_t[t] <= windpower + bigM;
+	wind_t[t] + bigM*then2_t[t] <= windpower + bigM;
 
 subject to windCon2{d in 1..nDims, t in 1..horizon}:
-	wind_dt[d,t] - bigM*then2_t[t] >= windpower - bigM;
+	wind_t[t] - bigM*then2_t[t] >= windpower - bigM;
 
 subject to windCon3{d in 1..nDims, t in 1..horizon}:
-	wind_dt[d,t] - bigM*then2_t[t] <= 0;
+	wind_t[t] - bigM*then2_t[t] <= 0;
 
 subject to windCon4{d in 1..nDims, t in 1..horizon}:
-	wind_dt[d,t] + bigM*then2_t[t] >= 0;
+	wind_t[t] + bigM*then2_t[t] >= 0;
 
 subject to minMoveCon{d in 1..nDims, t in 1..horizon}:
 	move_dt[d,t] >= minactionbounds_d[d];
@@ -122,13 +122,13 @@ subject to maxLocationCon{d in 1..nDims, t in 1..horizon+1}:
 	location_dt[d,t] <= maxmazebounds_d[d];
 
 subject to nextLocationCon1{d in 1..nDims, t in 1..horizon}:
-	location_dt[d,t+1] - location_dt[d,t] - discount*move_dt[d,t] - winddirections_d[d]*wind_dt[d,t] + bigM*then_t[t] <= bigM;
+	location_dt[d,t+1] - location_dt[d,t] - discount*move_dt[d,t] - winddirections_d[d]*wind_t[t] + bigM*then_t[t] <= bigM;
 
 subject to nextLocationCon2{d in 1..nDims, t in 1..horizon}:
-	location_dt[d,t+1] - location_dt[d,t] - discount*move_dt[d,t] - winddirections_d[d]*wind_dt[d,t] - bigM*then_t[t] >= -1*bigM;
+	location_dt[d,t+1] - location_dt[d,t] - discount*move_dt[d,t] - winddirections_d[d]*wind_t[t] - bigM*then_t[t] >= -1*bigM;
 
 subject to nextLocationCon3{d in 1..nDims, t in 1..horizon}:
-	location_dt[d,t+1] - location_dt[d,t] - move_dt[d,t] - winddirections_d[d]*wind_dt[d,t] - bigM*then_t[t] <= 0;
+	location_dt[d,t+1] - location_dt[d,t] - move_dt[d,t] - winddirections_d[d]*wind_t[t] - bigM*then_t[t] <= 0;
 
 subject to nextLocationCon4{d in 1..nDims, t in 1..horizon}:
-	location_dt[d,t+1] - location_dt[d,t] - move_dt[d,t] - winddirections_d[d]*wind_dt[d,t] + bigM*then_t[t] >= 0;
+	location_dt[d,t+1] - location_dt[d,t] - move_dt[d,t] - winddirections_d[d]*wind_t[t] + bigM*then_t[t] >= 0;
