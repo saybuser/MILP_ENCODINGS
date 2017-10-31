@@ -8,5 +8,5 @@ data W:\Navigation.dat;
 solve;
 
 display z;
-display move_dt > soln_action.txt;
+display move_dt > soln_move.txt;
 display location_dt > soln_location.txt;
